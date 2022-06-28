@@ -160,3 +160,61 @@ module.exports = {
 Ejecutemos los comandos dev o build y miremos el archivo ./dist/index.html después de ejecutarlos.
 
 No es necesario incluir el JavaScript dentro del archivo HTML, Webpack lo ha inyectado automáticamente y ha minificado el código 😎.
+## Extracción de CSS
+Webpack por sí sólo no sabe como extraer código CSS en un archivo externo, pero tiene un loader y un plugin que lo hace.
+### Instala las dependencias:
+`> npm i -D mini-css-extract-plugin css-loader`
+### Agrega la siguiente regla al archivo webpack.config.js:
+`
+const HtmlWebpackPlugin = require("html-webpack-plugin"),
+  MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.js$/i,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        },
+      },
+      {
+        test: /\.html$/i,
+        use: [
+          {
+            loader: "html-loader",
+            options: { minimize: true },
+          },
+        ],
+      },
+      {
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
+      },
+    ],
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      filename: "./index.html",
+    }),
+    new MiniCssExtractPlugin(),
+  ],
+};
+`
+### Ahora crea el archivo ./src/style.css con algo de código:
+`
+html {
+  box-sizing: border-box;
+  font-family: sans-serif;
+  font-size: 16px;
+  color: #8dd6f9;
+  background-color: #2b3a42;
+}
+`
+### Ahora importamos los estilos desde el punto de entrada, el archivo ./src/index.js:
+`import style from "./style.css";`
+Ejecutemos los comandos dev o build y miremos el archivo ./dist/index.html después de ejecutarlos.
+
+No es necesario incluir el CSS dentro del archivo HTML, Webpack lo ha inyectado automáticamente y ha creado el archivo de estilos main.css 😎.
