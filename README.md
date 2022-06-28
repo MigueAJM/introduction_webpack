@@ -218,3 +218,18 @@ html {
 Ejecutemos los comandos dev o build y miremos el archivo ./dist/index.html después de ejecutarlos.
 
 No es necesario incluir el CSS dentro del archivo HTML, Webpack lo ha inyectado automáticamente y ha creado el archivo de estilos main.css 😎.
+## Servidor Web de Desarrollo
+No es muy óptimo estar ejecutando el comando dev cada vez que hacemos un cambio en nuestra aplicación lo ideal es configurar un servidor web de prueba que en automático recompile nuestro código y recargue el navegador.
+
+Webpack, cuenta con su propio servido de desarrollo.
+
+### Instala la dependencia:
+`> npm i -D webpack-dev-server`
+### Agregamos el comando start a nuestro package.json:
+`
+"scripts": {
+  "start": "webpack serve  --mode development --open --port 3000"
+}
+`
+### Al ejecutarlo, Webpack abrirá la aplicación en una ventana del navegador.
+`> npm start`
