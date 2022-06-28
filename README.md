@@ -106,3 +106,57 @@ Ejecutemos los comandos dev y build y miremos el archivo ./dist/main.js después
 
 npm run dev transpiló el archivo con sintaxis ESNext a ES5 indentado y con comentarios, gracias a la configuración del archivo webpack.config.js.
 npm run build transpiló el archivo con sintaxis ESNext a ES5 minificado y sin comentarios, gracias a la configuración del archivo webpack.config.js.
+## Inyección de JS en HTML
+Para inyectar el código dinámico que genera Webpack en los archivos HTML, necesita 2 dependencias : html-webpack-plugin y html-loader.
+### Instala las dependencias:
+`> npm i -D html-webpack-plugin html-loader`
+### Agrega la siguiente regla al archivo webpack.config.js:
+`
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.js$/i,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        },
+      },
+      {
+        test: /\.html$/i,
+        use: [
+          {
+            loader: "html-loader",
+            options: { minimize: true },
+          },
+        ],
+      },
+    ],
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      filename: "./index.html",
+    }),
+  ],
+};
+`
+### Ahora crea el archivo ./src/index.html:
+`
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Webpack</title>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+</html>
+`
+Ejecutemos los comandos dev o build y miremos el archivo ./dist/index.html después de ejecutarlos.
+
+No es necesario incluir el JavaScript dentro del archivo HTML, Webpack lo ha inyectado automáticamente y ha minificado el código 😎.
